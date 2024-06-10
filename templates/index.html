@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/x-icon" href="static/favicon.png">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+		<title>Example Login Page</title>
+	</head>
+	<body>
+		<div class="header">
+			{% if "logged_in" in session and session["logged_in"] %}
+				<h1><a href="{{ url_for('index') }}">Welcome, {{ session["username"] }}</a></h1>
+				<div class="filler"></div>
+				{% if "admin" in session and session["admin"] %}
+					<a href="{{ url_for('admin') }}">Admin page</a>
+				{% endif %}
+				<a href="{{ url_for('logout') }}">Logout</a>
+			{% else %}
+				<h1><a href="{{ url_for('index') }}">Welcome</a></h1>
+			{% endif %}
+		</div>
+		<div class="main">
+			{% if "logged_in" not in session %}
+				<form class="main-form" action="/login" method="POST">
+					<fieldset>
+						<legend>Login</legend>
+						<label for="username">Username:</label><br>
+						<input type="text" id="username" name="username" autocomplete="username" required><br>
+						<label for="password">Password:</label><br>
+						<input type="password" id="password" name="password" autocomplete="current-password" required><br>
+						<br>
+						<input type="submit" value="Login">
+						{% with messages = get_flashed_messages() %}
+							{% if messages %}
+								{% for message in messages %}
+									<span>{{ message }}</span>
+								{% endfor %}
+							{% endif %}
+						{% endwith %}
+					</fieldset>
+				</form>
+			{% endif %}
+		</div>
+		<div class="footer"></div>
+	</body>
+</html>
